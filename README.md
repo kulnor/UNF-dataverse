@@ -49,6 +49,8 @@ Supported Types:
 - `bitstring`
 - `datetime`
 
+Note: In the generated JSON output, all numeric types (double, float, short, byte, long, int) are reported as `"numeric"` since they are treated identically in UNF calculations (internally converted to doubles).
+
 Examples:
 
 Single-column text file (one value per line):

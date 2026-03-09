@@ -531,7 +531,17 @@ public final class UnfCli {
         }
 
         String schemaType() {
-            return name().toLowerCase(Locale.ROOT);
+            switch (this) {
+                case DOUBLE:
+                case FLOAT:
+                case SHORT:
+                case BYTE:
+                case LONG:
+                case INT:
+                    return "numeric";
+                default:
+                    return name().toLowerCase(Locale.ROOT);
+            }
         }
 
         static ColumnType infer(List<String> values) {

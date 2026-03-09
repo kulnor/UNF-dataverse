@@ -66,7 +66,7 @@ public final class UnfCli {
             throw new IllegalArgumentException("Input path does not exist: " + inputPath);
         }
 
-        String metadataJson = metadataJson();
+        String metadataJson = metadataJson(options);
         String resultJson;
 
         if (Files.isDirectory(inputPath)) {
@@ -260,7 +260,27 @@ public final class UnfCli {
         return out.toString();
     }
 
-    private static String metadataJson() {
+    private static String metadataJson(CliOptions options) {
+        StringBuilder optionsJson = new StringBuilder();
+        optionsJson.append("{");
+        if (options.output != null) {
+            optionsJson.append("\"output\":\"").append(escapeJson(options.output)).append("\",");
+        }
+        optionsJson.append("\"type\":\"").append(escapeJson(options.type)).append("\",");
+        if (options.datetimeFormat != null) {
+            optionsJson.append("\"datetime_format\":\"").append(escapeJson(options.datetimeFormat)).append("\",");
+        }
+        if (options.delimiter != null) {
+            optionsJson.append("\"delimiter\":\"").append(escapeJson(options.delimiter)).append("\",");
+        }
+        optionsJson.append("\"has_header\":").append(options.hasHeader).append(",");
+        if (options.columnTypes != null) {
+            optionsJson.append("\"column_types\":\"").append(escapeJson(options.columnTypes)).append("\"");
+        } else {
+            optionsJson.append("\"column_types\":null");
+        }
+        optionsJson.append("}");
+
         return "{"
                 + "\"timestamp\":\"" + Instant.now() + "\","
                 + "\"parameters\":{"
@@ -272,7 +292,8 @@ public final class UnfCli {
                 + "\"software\":{"
                 + "\"name\":\"" + SOFTWARE_NAME + "\","
                 + "\"version\":\"" + SOFTWARE_VERSION + "\""
-                + "}"
+                + "},"
+                + "\"options\":" + optionsJson.toString()
                 + "}";
     }
 

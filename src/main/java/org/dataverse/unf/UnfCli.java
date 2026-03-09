@@ -46,11 +46,11 @@ public final class UnfCli {
                 System.out.println(usage());
                 return;
             }
-            String json = generateReport(Path.of(options.input), options);
+            String json = prettyJson(generateReport(Path.of(options.input), options));
             if (options.output == null) {
                 System.out.println(json);
             } else {
-                Files.writeString(Path.of(options.output), json, StandardCharsets.UTF_8);
+                Files.writeString(Path.of(options.output), json + System.lineSeparator(), StandardCharsets.UTF_8);
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -429,6 +429,68 @@ public final class UnfCli {
                 + "  --column-types <list>     Comma-separated types for CSV/TSV columns.\n"
                 + "                           If omitted, types are inferred per column.\n"
                 + "  --help                    Show this help text.\n";
+    }
+
+    private static String prettyJson(String minified) {
+        StringBuilder out = new StringBuilder();
+        int indent = 0;
+        boolean inString = false;
+        boolean escaping = false;
+
+        for (int i = 0; i < minified.length(); i++) {
+            char c = minified.charAt(i);
+
+            if (inString) {
+                out.append(c);
+                if (escaping) {
+                    escaping = false;
+                } else if (c == '\\') {
+                    escaping = true;
+                } else if (c == '"') {
+                    inString = false;
+                }
+                continue;
+            }
+
+            switch (c) {
+                case '"':
+                    inString = true;
+                    out.append(c);
+                    break;
+                case '{':
+                case '[':
+                    out.append(c).append('\n');
+                    indent++;
+                    appendIndent(out, indent);
+                    break;
+                case '}':
+                case ']':
+                    out.append('\n');
+                    indent--;
+                    appendIndent(out, indent);
+                    out.append(c);
+                    break;
+                case ',':
+                    out.append(c).append('\n');
+                    appendIndent(out, indent);
+                    break;
+                case ':':
+                    out.append(": ");
+                    break;
+                default:
+                    if (!Character.isWhitespace(c)) {
+                        out.append(c);
+                    }
+            }
+        }
+
+        return out.toString();
+    }
+
+    private static void appendIndent(StringBuilder out, int indent) {
+        for (int i = 0; i < indent; i++) {
+            out.append("  ");
+        }
     }
 
     public static final class CliOptions {

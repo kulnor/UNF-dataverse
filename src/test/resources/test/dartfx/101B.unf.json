@@ -1,7 +1,7 @@
 {
   "unf_version": "6",
   "metadata": {
-    "timestamp": "2026-03-09T19:07:51.431987Z",
+    "timestamp": "2026-03-09T22:08:04.377556Z",
     "parameters": {
       "N": 7,
       "X": 128,
@@ -11,6 +11,12 @@
     "software": {
       "name": "dataverse-unf-java",
       "version": "6.0.2-SNAPSHOT"
+    },
+    "options": {
+      "output": "src/test/resources/test/dartfx/101B.unf.json",
+      "type": "string",
+      "has_header": true,
+      "column_types": null
     }
   },
   "result": {
@@ -20,7 +26,7 @@
     "columns": [
       {
         "name": "id",
-        "type": "int",
+        "type": "numeric",
         "unf": "UNF:6:AvELPR5QTaBbnq6S22Msow=="
       },
       {
@@ -30,7 +36,7 @@
       },
       {
         "name": "income",
-        "type": "int",
+        "type": "numeric",
         "unf": "UNF:6:v/5E9kHI79TVvlGYinvxTQ=="
       },
       {

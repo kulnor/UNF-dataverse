@@ -431,7 +431,7 @@ public final class UnfCli {
                 + "  --help                    Show this help text.\n";
     }
 
-    private static String prettyJson(String minified) {
+    public static String prettyJson(String minified) {
         StringBuilder out = new StringBuilder();
         int indent = 0;
         boolean inString = false;
@@ -494,14 +494,14 @@ public final class UnfCli {
     }
 
     public static final class CliOptions {
-        private String input;
-        private String output;
-        private String type = "string";
-        private String datetimeFormat;
-        private String delimiter;
-        private boolean hasHeader = true;
-        private String columnTypes;
-        private boolean help;
+        public String input;
+        public String output;
+        public String type = "string";
+        public String datetimeFormat;
+        public String delimiter;
+        public boolean hasHeader = true;
+        public String columnTypes;
+        public boolean help;
 
         public static CliOptions parse(String[] args) {
             CliOptions options = new CliOptions();

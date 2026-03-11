@@ -124,10 +124,34 @@ Operational Notes:
 - `--column-types` must include exactly one type per column.
 - CSV/TSV parsing is delimiter-split based and does not implement quoted-field CSV escaping semantics.
 
-For quick usage text:
-
 ```bash
 java -cp target/unf-6.0.2-SNAPSHOT.jar org.dataverse.unf.UnfCli --help
+```
+
+Programmatic Usage
+------------------
+
+The UNF reporting logic can be used as a library by other Java applications.
+
+```java
+import org.dataverse.unf.UnfCli;
+import java.nio.file.Path;
+
+// 1. Configure options programmatically
+UnfCli.CliOptions options = new UnfCli.CliOptions()
+    .withInput("data.csv")
+    .withType("string");
+
+// (Optional) Configure advanced settings
+options.hasHeader = true;
+options.columnTypes = "int,string,double";
+
+// 2. Generate the JSON report directly
+String json = UnfCli.generateReport(Path.of("data.csv"), options);
+
+// 3. (Optional) Use the built-in pretty printer
+String prettyJson = UnfCli.prettyJson(json);
+System.out.println(prettyJson);
 ```
 
 License

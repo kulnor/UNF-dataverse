@@ -29,7 +29,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * CLI entrypoint for producing UNF reports aligned to doc/unf6.schema.json.
+ * CLI entrypoint for producing UNF reports aligned to doc/unf.schema.json.
  */
 public final class UnfCli {
 

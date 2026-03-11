@@ -11,7 +11,7 @@ medium and format of the data.
 CLI Usage
 ---------
 
-This package includes a CLI entrypoint that reads supported input files and emits JSON aligned with `doc/unf6.schema.json`.
+This package includes a CLI entrypoint that reads supported input files and emits JSON aligned with `doc/unf.schema.json`.
 
 Build:
 

@@ -19,6 +19,15 @@ Build:
 mvn -q -DskipUT=true package
 ```
 
+Run from terminal (quick start):
+
+```bash
+cd ~/git-hub/UNF-dataverse
+mvn -q -DskipUT=true package
+java -cp target/unf-<version>-SNAPSHOT.jar org.dataverse.unf.UnfCli --help
+java -cp target/unf-<version>-SNAPSHOT.jar org.dataverse.unf.UnfCli --input <path>
+```
+
 CLI Entry Point:
 
 ```bash

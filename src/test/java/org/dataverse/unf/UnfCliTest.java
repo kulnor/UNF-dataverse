@@ -56,4 +56,36 @@ class UnfCliTest {
         assertTrue(json.contains("UNF:6:+kc3wyGwZ6otDkZwpvswDw=="));
         assertTrue(json.contains("UNF:6:R2Xa8BqKPRgj5EpnYEZQyw=="));
     }
+
+    @Test
+    void generateReport_withMissingValues_infersNumericAndHandlesBlanks() throws Exception {
+        Path tempFile = Files.createTempFile("missing-numeric", ".csv");
+        // var1 is all numeric, var2 has a blank, var3 has a blank
+        Files.writeString(tempFile, "var1,var2,var3\n1,1,true\n2,,false\n3,3,\n", StandardCharsets.UTF_8);
+
+        UnfCli.CliOptions options = new UnfCli.CliOptions().withInput(tempFile.toString());
+        String json = UnfCli.generateReport(tempFile, options);
+
+        // Inference checks
+        assertTrue(json.contains("\"name\":\"var1\",\"type\":\"numeric\""));
+        assertTrue(json.contains("\"name\":\"var2\",\"type\":\"numeric\""));
+        assertTrue(json.contains("\"name\":\"var3\",\"type\":\"boolean\""));
+
+        // No errors during UNF calculation
+        assertTrue(json.contains("\"unf\":\"UNF:6:"));
+    }
+
+    @Test
+    void generateReport_explicitNumericWithBlanks_worksWithoutError() throws Exception {
+        Path tempFile = Files.createTempFile("explicit-blanks", ".csv");
+        Files.writeString(tempFile, "val\n1\n\n3\n", StandardCharsets.UTF_8);
+
+        UnfCli.CliOptions options = new UnfCli.CliOptions()
+                .withInput(tempFile.toString())
+                .withColumnTypes("int");
+        String json = UnfCli.generateReport(tempFile, options);
+
+        assertTrue(json.contains("\"name\":\"val\",\"type\":\"numeric\""));
+        assertTrue(json.contains("\"unf\":\"UNF:6:"));
+    }
 }

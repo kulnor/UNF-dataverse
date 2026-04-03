@@ -215,19 +215,19 @@ public final class UnfCli {
             case STRING:
                 return UNFUtil.calculateUNF(values.toArray(new String[0]));
             case DOUBLE:
-                return UNFUtil.calculateUNF(toDoubleArray(values));
+                return UNFUtil.calculateUNF((Number[]) toDoubleArray(values));
             case FLOAT:
-                return UNFUtil.calculateUNF(toFloatArray(values));
+                return UNFUtil.calculateUNF((Number[]) toFloatArray(values));
             case SHORT:
-                return UNFUtil.calculateUNF(toShortArray(values));
+                return UNFUtil.calculateUNF((Number[]) toShortArray(values));
             case BYTE:
-                return UNFUtil.calculateUNF(toByteArray(values));
+                return UNFUtil.calculateUNF((Number[]) toByteArray(values));
             case LONG:
-                return UNFUtil.calculateUNF(toLongArray(values));
+                return UNFUtil.calculateUNF((Number[]) toLongArray(values));
             case INT:
-                return UNFUtil.calculateUNF(toIntArray(values));
+                return UNFUtil.calculateUNF((Number[]) toIntArray(values));
             case BOOLEAN:
-                return UNFUtil.calculateUNF(toBooleanArray(values));
+                return UnfDigest.unf(toBooleanArray(values))[0];
             case BITSTRING:
                 return UNFUtil.calculateUNF(toBitStringArray(values));
             case DATETIME:
@@ -306,62 +306,83 @@ public final class UnfCli {
         return idx > 0 ? name.substring(0, idx) : name;
     }
 
-    private static double[] toDoubleArray(List<String> values) {
-        double[] out = new double[values.size()];
+    private static Double[] toDoubleArray(List<String> values) {
+        Double[] out = new Double[values.size()];
         for (int i = 0; i < values.size(); i++) {
-            out[i] = Double.parseDouble(values.get(i));
-        }
-        return out;
-    }
-
-    private static float[] toFloatArray(List<String> values) {
-        float[] out = new float[values.size()];
-        for (int i = 0; i < values.size(); i++) {
-            out[i] = Float.parseFloat(values.get(i));
-        }
-        return out;
-    }
-
-    private static short[] toShortArray(List<String> values) {
-        short[] out = new short[values.size()];
-        for (int i = 0; i < values.size(); i++) {
-            out[i] = Short.parseShort(values.get(i));
-        }
-        return out;
-    }
-
-    private static byte[] toByteArray(List<String> values) {
-        byte[] out = new byte[values.size()];
-        for (int i = 0; i < values.size(); i++) {
-            out[i] = Byte.parseByte(values.get(i));
-        }
-        return out;
-    }
-
-    private static long[] toLongArray(List<String> values) {
-        long[] out = new long[values.size()];
-        for (int i = 0; i < values.size(); i++) {
-            out[i] = Long.parseLong(values.get(i));
-        }
-        return out;
-    }
-
-    private static int[] toIntArray(List<String> values) {
-        int[] out = new int[values.size()];
-        for (int i = 0; i < values.size(); i++) {
-            out[i] = Integer.parseInt(values.get(i));
-        }
-        return out;
-    }
-
-    private static boolean[] toBooleanArray(List<String> values) {
-        boolean[] out = new boolean[values.size()];
-        for (int i = 0; i < values.size(); i++) {
-            String value = values.get(i).trim().toLowerCase(Locale.ROOT);
-            if (!"true".equals(value) && !"false".equals(value)) {
-                throw new IllegalArgumentException("Invalid boolean value: " + values.get(i));
+            String v = values.get(i);
+            if (v != null && !v.isBlank()) {
+                out[i] = Double.parseDouble(v.trim());
             }
-            out[i] = Boolean.parseBoolean(value);
+        }
+        return out;
+    }
+
+    private static Float[] toFloatArray(List<String> values) {
+        Float[] out = new Float[values.size()];
+        for (int i = 0; i < values.size(); i++) {
+            String v = values.get(i);
+            if (v != null && !v.isBlank()) {
+                out[i] = Float.parseFloat(v.trim());
+            }
+        }
+        return out;
+    }
+
+    private static Short[] toShortArray(List<String> values) {
+        Short[] out = new Short[values.size()];
+        for (int i = 0; i < values.size(); i++) {
+            String v = values.get(i);
+            if (v != null && !v.isBlank()) {
+                out[i] = Short.parseShort(v.trim());
+            }
+        }
+        return out;
+    }
+
+    private static Byte[] toByteArray(List<String> values) {
+        Byte[] out = new Byte[values.size()];
+        for (int i = 0; i < values.size(); i++) {
+            String v = values.get(i);
+            if (v != null && !v.isBlank()) {
+                out[i] = Byte.parseByte(v.trim());
+            }
+        }
+        return out;
+    }
+
+    private static Long[] toLongArray(List<String> values) {
+        Long[] out = new Long[values.size()];
+        for (int i = 0; i < values.size(); i++) {
+            String v = values.get(i);
+            if (v != null && !v.isBlank()) {
+                out[i] = Long.parseLong(v.trim());
+            }
+        }
+        return out;
+    }
+
+    private static Integer[] toIntArray(List<String> values) {
+        Integer[] out = new Integer[values.size()];
+        for (int i = 0; i < values.size(); i++) {
+            String v = values.get(i);
+            if (v != null && !v.isBlank()) {
+                out[i] = Integer.parseInt(v.trim());
+            }
+        }
+        return out;
+    }
+
+    private static Boolean[] toBooleanArray(List<String> values) {
+        Boolean[] out = new Boolean[values.size()];
+        for (int i = 0; i < values.size(); i++) {
+            String v = values.get(i);
+            if (v != null && !v.isBlank()) {
+                String value = v.trim().toLowerCase(Locale.ROOT);
+                if (!"true".equals(value) && !"false".equals(value)) {
+                    throw new IllegalArgumentException("Invalid boolean value: " + v);
+                }
+                out[i] = Boolean.parseBoolean(value);
+            }
         }
         return out;
     }
@@ -370,10 +391,13 @@ public final class UnfCli {
         BitString[] out = new BitString[values.size()];
         for (int i = 0; i < values.size(); i++) {
             String v = values.get(i);
-            if (!v.matches("[01]+")) {
-                throw new IllegalArgumentException("Invalid bitstring value: " + v);
+            if (v != null && !v.isBlank()) {
+                String trimmed = v.trim();
+                if (!trimmed.matches("[01]+")) {
+                    throw new IllegalArgumentException("Invalid bitstring value: " + v);
+                }
+                out[i] = new BitString(trimmed);
             }
-            out[i] = new BitString(v);
         }
         return out;
     }
@@ -630,12 +654,17 @@ public final class UnfCli {
         }
 
         private static boolean all(List<String> values, Checker checker) {
+            boolean hasNonEmpty = false;
             for (String value : values) {
-                if (!checker.test(value)) {
+                if (value == null || value.isBlank()) {
+                    continue;
+                }
+                hasNonEmpty = true;
+                if (!checker.test(value.trim())) {
                     return false;
                 }
             }
-            return true;
+            return hasNonEmpty;
         }
 
         private static boolean isBoolean(String value) {
